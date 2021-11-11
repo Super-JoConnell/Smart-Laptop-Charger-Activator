@@ -14,12 +14,12 @@ headers = {
 
 def Switch_Off():
     data = 'OFF'
-    response = requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
+    requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
 
 
 def Switch_On():
     data = 'ON'
-    response = requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
+    requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
 
 
 def Main():
