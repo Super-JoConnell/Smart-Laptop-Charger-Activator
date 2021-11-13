@@ -58,13 +58,15 @@ def Main():
     batt = psutil.sensors_battery()
     plugged = bool(batt.power_plugged)
     perc = int(batt.percent)
+    print('Battery Charging: ', plugged)
+    print('Battery Percentage: ', perc)
     if perc >= 75:
-        if perc >= 78 & plugged == True:
+        if perc >= 78 and plugged == True:
             forceoff()
         else:
             Switch_Off()
     elif perc <= 65:
-        if perc <= 62 & plugged == False:
+        if perc <= 62 and plugged == False:
             forceon()
         else:
             Switch_On()
