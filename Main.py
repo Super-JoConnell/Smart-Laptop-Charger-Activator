@@ -1,7 +1,8 @@
 # Script To Automize Smart Switch For Laptop Charger
 
 import requests
-#going to import another module that gathers battery info etc but like it is so late and i am tired and need to go to bed and watch some 90s tv shoes like sabrina the teenage witch because i am sad
+import psutil
+import time
 
 #Constants
 
@@ -12,6 +13,34 @@ headers = {
 
 #Functions 
 
+def forceoff():  #sometimes my smart switch internal relay sticks so this is to work it back and forth to unstick
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+
+def forceon():  #sometimes my smart switch internal relay sticks so this is to work it back and forth to unstick
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+    Switch_Off()
+    Switch_On()
+
 def Switch_Off():
     data = 'OFF'
     requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
@@ -21,10 +50,26 @@ def Switch_On():
     data = 'ON'
     requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
 
+def loop():
+    while True:
+        Main()
 
 def Main():
-    Switch_Off()
-    Switch_On()
+    batt = psutil.sensors_battery()
+    plugged = bool(batt.power_plugged)
+    perc = int(batt.percent)
+    if perc >= 75:
+        if perc >= 78 & plugged == True:
+            forceoff()
+        else:
+            Switch_Off()
+    elif perc <= 65:
+        if perc <= 62 & plugged == False:
+            forceon()
+        else:
+            Switch_On()
+    time.sleep(30)
+
 
 if __name__ == "__main__":
-    Main()
+    loop()
