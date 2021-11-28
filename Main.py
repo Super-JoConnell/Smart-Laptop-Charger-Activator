@@ -3,6 +3,8 @@
 import requests
 import psutil
 import time
+import sys
+from playsound import playsound
 
 #Constants
 
@@ -42,13 +44,20 @@ def forceon():  #sometimes my smart switch internal relay sticks so this is to w
     Switch_On()
 
 def Switch_Off():
-    data = 'OFF'
-    requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
-
+    try:
+        data = 'OFF'
+        requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
+    except:
+        playsound('SFX/internet.wav')
+        print('Please Make Sure You Have Connected to the Internet and Your Curl Command Destination is Correct')
 
 def Switch_On():
-    data = 'ON'
-    requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
+    try:
+        data = 'ON'
+        requests.post('http://192.168.8.234:8080/rest/items/OnOffSwitch', headers=headers, data=data)
+    except:
+        playsound('SFX/internet.wav')
+        print('Please Make Sure You Have Connected to the Internet and Your Curl Command Destination is Correct')
 
 def loop():
     while True:
@@ -62,11 +71,13 @@ def Main():
     print('Battery Percentage: ', perc)
     if perc >= 75:
         if perc >= 78 and plugged == True:
+            playsound('SFX/highbat.wav')
             forceoff()
         else:
             Switch_Off()
     elif perc <= 65:
         if perc <= 62 and plugged == False:
+            playsound('SFX/lowbat.wav')
             forceon()
         else:
             Switch_On()
