@@ -1,5 +1,5 @@
 # Script To Automize Smart Switch For Laptop Charger
-
+# Test
 import requests
 import psutil
 import time
