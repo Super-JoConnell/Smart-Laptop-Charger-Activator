@@ -1,10 +1,11 @@
 # Script To Automize Smart Switch For Laptop Charger
-# Test
+
 import requests
 import psutil
 import time
 import sys
 from playsound import playsound
+from pynput import keyboard
 
 #Constants
 
@@ -13,8 +14,27 @@ headers = {
     'Accept': 'application/json',
 }
 
+# Global Variable
+
+a = True # Used for loop break connected to Hotkey
+
 #Functions 
 
+def gmodeon():
+    playsound('SFX/gamemode.wav')
+    print('<ctrl>+<alt>+g pressed -- GameMode Now Active')
+    Switch_On()
+    global a
+    a = False
+
+def gmodeoff():
+    #playsound('SFX/normalmode.wav')
+    print('<ctrl>+<alt>+b pressed -- Battery Saver Cycle Active')
+    Switch_Off()
+    time.sleep(5)
+    global a
+    a = True
+    
 def forceoff():  #sometimes my smart switch internal relay sticks so this is to work it back and forth to unstick
     while True:
         Switch_On()
@@ -65,6 +85,7 @@ def forceoff():  #sometimes my smart switch internal relay sticks so this is to 
         if plugged == False:
             print('Successfully Forced OFF')
             break
+
 def forceon():  #sometimes my smart switch internal relay sticks so this is to work it back and forth to unstick
     Switch_Off()
     Switch_On()
@@ -97,7 +118,12 @@ def Switch_On():
 
 def loop():
     while True:
-        Main()
+        while a == True:
+            Main()
+        else:
+            print('Game Moce Active ...')
+            time.sleep(5)
+        
 
 def Main():
     batt = psutil.sensors_battery()
@@ -120,5 +146,16 @@ def Main():
     time.sleep(30)
 
 
+#Hotkey
+
+h = keyboard.GlobalHotKeys({
+        '<ctrl>+<alt>+g': gmodeon,
+        '<ctrl>+<alt>+b': gmodeoff})
+h.start()
+
 if __name__ == "__main__":
-    loop()
+    try:
+        loop()
+    except KeyboardInterrupt:
+        print('Program Ended By <ctr>+c Thank you for using this awesome program')
+    
