@@ -22,19 +22,24 @@ a = True # Used for loop break connected to Hotkey
 
 def gmodeon():
     playsound('SFX/gamemode.wav')
-    print('<ctrl>+<alt>+g pressed -- GameMode Now Active')
+    print('<ctrl>+<alt>+<g> pressed -- GameMode Now Active')
     Switch_On()
     global a
     a = False
 
 def gmodeoff():
-    #playsound('SFX/normalmode.wav')
-    print('<ctrl>+<alt>+b pressed -- Battery Saver Cycle Active')
+    playsound('SFX/normalmode.wav')
+    print('<ctrl>+<alt>+<b> pressed -- Battery Saver Cycle Active')
     Switch_Off()
     time.sleep(5)
     global a
     a = True
-    
+
+def exita():
+    print('<ctrl>+<alt>+<e> pressed -- Now Exiting in 5 Seconds Thanks')
+    time.sleep(5)
+    sys.exit() #somehow this doesn't work LOL
+
 def forceoff():  #sometimes my smart switch internal relay sticks so this is to work it back and forth to unstick
     while True:
         Switch_On()
@@ -150,7 +155,8 @@ def Main():
 
 h = keyboard.GlobalHotKeys({
         '<ctrl>+<alt>+g': gmodeon,
-        '<ctrl>+<alt>+b': gmodeoff})
+        '<ctrl>+<alt>+b': gmodeoff,
+        '<ctrl>+<alt>+e': exita})
 h.start()
 
 if __name__ == "__main__":
